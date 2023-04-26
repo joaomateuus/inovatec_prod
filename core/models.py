@@ -35,6 +35,26 @@ class Estabelecimento(models.Model):
     class Meta:
         db_table = 'tb_estabelecimentos'
 
+class Qrcode(models.Model):   
+    image = models.ImageField( 
+        upload_to='images/qrcode/',
+        blank=False,
+        null=False
+    )
+    
+    qrcode_link = models.CharField(
+        'Link do Qrcode',
+        max_length=50,
+        null=False,
+        blank=False
+    )
+    
+    def __str__(self):
+        return f"{self.id} - {self.image}"
+    
+    class Meta:
+        db_table = 'tb_qrcodes'
+
 
 class Extintor(models.Model):
     codigo = models.CharField(
@@ -70,17 +90,12 @@ class Extintor(models.Model):
         on_delete=models.CASCADE,
     )
     
-    qrcode = models.ImageField(
-        upload_to='images/qrcode',
-        blank=True,
+    qrcode = models.ForeignKey(
+        Qrcode,
+        related_name='qrcode_ext',
+        on_delete=models.DO_NOTHING,
         null=True,
-    )
-    
-    qrcode_link = models.CharField(
-        'Link do Qrcode',
-        max_length=30,
-        blank=True,
-        null=True,
+        blank=True
     )
     
     def __str__(self):
@@ -113,32 +128,3 @@ class Vistoria(models.Model):
     
     class Meta:
         db_table = 'tb_vistorias'
-    
-    
-class Qrcode(models.Model):
-    extintor = models.ForeignKey(
-        Extintor,
-        related_name='extintor_qr',
-        on_delete=models.CASCADE,
-        null=False,
-        blank=False
-    )
-    
-    qrcode = models.ImageField(
-        upload_to='images/qrcode',
-        blank=False,
-        null=False
-    )
-    
-    qrcode_link = models.CharField(
-        'Link do Qrcode',
-        max_length=30,
-        null=False,
-        blank=False
-    )
-    
-    def __str__(self):
-        return f"{self.id} - {self.extintor.codigo}"
-    
-    class Meta:
-        db_table = 'tb_qrcodes'

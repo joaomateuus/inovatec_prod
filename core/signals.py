@@ -9,14 +9,13 @@ def create_qrcode_for_extinguisher(sender, instance: models.Extintor, created, *
         try: 
             qr_code, qrcode_link = qrcode_provider.qrcode_generator(instance)
             
-            models.Extintor.objects.filter(id=instance.id).update(
-                qrcode=qr_code,
+            qrcode_instance = models.Qrcode.objects.create(
+                image=qr_code,
                 qrcode_link=qrcode_link
             )
-            models.Qrcode.objects.create(
-                extintor=instance,
-                qrcode=qr_code,
-                qrcode_link=qrcode_link
+            
+            models.Extintor.objects.filter(id=instance.id).update(
+                qrcode=qrcode_instance
             )
         except Exception as e:
             print(f"Error on qrcode genration -> {e}")

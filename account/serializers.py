@@ -37,6 +37,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Usuario
         fields = (
-            'id', 'username','nome', 'email', 'password', 'password_confirm',
-            'is_staff', 'is_superuser', 'last_login' 
+            'id', 'username','nome', 'email','cpf', 'is_fiscal', 'numero_telefone',
+            'password', 'password_confirm', 'is_staff', 'is_superuser', 'last_login' 
         )

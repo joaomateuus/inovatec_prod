@@ -4,6 +4,7 @@ from core import serializers
 from account import serializers as account_serializers
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 class EmpresaViewSet(viewsets.ModelViewSet):
     queryset = models.Empresa.objects.all()
@@ -28,6 +29,7 @@ class DenunciaViewSet(viewsets.ModelViewSet):
 class FiscalViewSet(viewsets.ModelViewSet):
     queryset = models.Fiscal.objects.all()
     serializer_class = serializers.FiscalSerializer
+    permission_classes = (IsAuthenticated,)
     
     def create(self, request, *args, **kwargs):
         try:

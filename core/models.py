@@ -298,8 +298,7 @@ class VistoriasRealizadas(models.Model):
         null=True,
         blank=True
     )
-    local_acesso = models.BooleanField(
-        null=True,
+    local_acesso = models.BooleanField(null=True,
         blank=True
     )
     informacoes = models.TextField(

@@ -90,15 +90,27 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME', str(os.getenv('DB_NAME'))),
-        'USER': os.environ.get('DB_USER', str(os.getenv('DB_USER'))),
-        'PASSWORD': os.environ.get('DB_PASS', str(os.getenv('DB_PASS'))),
-        'HOST': str(os.getenv('DB_HOST')),
-        'PORT': str(os.getenv('DB_PORT')),
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': os.environ.get('DB_NAME_PROD'),
+    'HOST': os.environ.get('DB_HOST_PROD'),
+    'PORT': os.environ.get('DB_PORT_PROD'),
+    'USER': os.environ.get('DB_USER_PROD'),
+    'PASSWORD': os.environ.get('DB_PASSWORD_PROD'),
+  }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.environ.get('DB_NAME', str(os.getenv('DB_NAME'))),
+#         'USER': os.environ.get('DB_USER', str(os.getenv('DB_USER'))),
+#         'PASSWORD': os.environ.get('DB_PASS', str(os.getenv('DB_PASS'))),
+#         'HOST': str(os.getenv('DB_HOST')),
+#         'PORT': str(os.getenv('DB_PORT')),
+#     }
+# }
 
 
 # Database

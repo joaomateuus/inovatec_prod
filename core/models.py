@@ -1,3 +1,4 @@
+import random
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -106,7 +107,7 @@ class Extintor(models.Model):
     )
     empresa = models.ForeignKey(
         Empresa,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         null=True,
         blank=True,
     )
@@ -119,7 +120,7 @@ class Extintor(models.Model):
     )
     
     def __str__(self):
-        return f"{self.id} - {self.tipo}"
+        return f"{self.id} - {self.tipo}: {self.local}"
     
     class Meta:
         db_table = 'tb_extintores'
@@ -199,8 +200,7 @@ class Denuncia(models.Model):
         return super().save(*args, **kwargs)
     
     def generate_protocol_number(self):
-        protocol = f"{self.dt_denuncia} - {self.local_ocorrencia}"
-        return protocol
+        return random.randint(100000, 999999)
     
     def __str__(self):
         return f"{self.numero_protocolo}"
@@ -209,21 +209,68 @@ class Denuncia(models.Model):
         db_table = 'tb_denuncias'
     
     
-class Vistoria(models.Model):
-    fiscal = models.ForeignKey(
-        Fiscal,
-        null=True,
-        blank=True,
-        on_delete=models.DO_NOTHING
-    )
-    denuncia = models.ForeignKey(
-        Denuncia,
-        null=True,
-        blank=True,
-        on_delete=models.DO_NOTHING
+class VistoriasAgendadas(models.Model):
+    class Status(models.TextChoices):
+        CONFIRMADO = 'CO', ('Confirmada')
+        CANCELADO= 'CA', ('CANCELADA')
+    
+    protocolo_agendamento = models.CharField(
+        max_length=20,
+        unique=True,
+        editable=False
     )
     empresa = models.ForeignKey(
         Empresa,
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING
+    )
+    data_agendada = models.DateField(
+        null=True,
+        blank=True
+    )
+    status = models.CharField(
+        'Status',
+        max_length=5,
+        choices=Status.choices,
+        default=Status.CONFIRMADO
+    )
+    contato = models.CharField(
+        'Contato',
+        max_length=30,
+        null=True,
+        blank=True,
+    )
+    
+    def save(self, *args, **kwargs):
+        if not self.protocolo_agendamento:
+            self.protocolo_agendamento = self.generate_protocol_number()
+        
+        return super().save(*args, **kwargs)
+    
+    def generate_protocol_number(self):
+        return random.randint(100000, 999999)
+    
+    def __str__(self):
+        return f"{self.numero_protocolo}"
+    
+    class Meta:
+        db_table = 'tb_vistorias_agendamento'
+
+class VistoriasRealizadas(models.Model):
+    vistoria_agendada = models.ForeignKey(
+        VistoriasAgendadas,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+    )
+    numero_protocolo = models.CharField(
+        max_length=20,
+        unique=True,
+        editable=False
+    )
+    fiscal = models.ForeignKey(
+        Fiscal,
         null=True,
         blank=True,
         on_delete=models.DO_NOTHING
@@ -234,11 +281,28 @@ class Vistoria(models.Model):
         blank=True,
         on_delete=models.DO_NOTHING
     )
-    data_agendada = models.DateField(
+    data_realizada = models.DateField(
+        null=True,
+        blank=True,
+        auto_now_add=True,
+    )
+    bocal_vedado = models.BooleanField(
         null=True,
         blank=True
     )
-    data_realizada = models.DateField(
+    indicador_pressao = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    pino_seguranca = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    selo_certificacao = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    local_acesso = models.BooleanField(
         null=True,
         blank=True
     )
@@ -246,16 +310,36 @@ class Vistoria(models.Model):
         null=True,
         blank=True,
     )
+    comentarios = models.TextField(
+        null=True,
+        blank=True
+    )
     resultado = models.TextField(
         null=True,
         blank=True,
     )
+    anexos_img = models.ImageField(
+        'Anexos Vistoria', 
+        upload_to='images/vistorias/',
+        blank=True,
+        null=True
+    )
     
-    def __str__(self):
-        return f"{self.extintor.codigo} - {self.data}"
+    def save(self, *args, **kwargs):
+        if not self.numero_protocolo:
+            self.numero_protocolo = self.generate_protocol_number()
+        
+        return super().save(*args, **kwargs)
+    
+    def generate_protocol_number(self):
+        return random.randint(100000, 999999)
+    
+    # def __str__(self):
+    #     return f"{self.numero_protocolo}"
     
     class Meta:
-        db_table = 'tb_vistorias'
+        db_table = 'tb_vistorias_realizadas'
+    
 
 
     

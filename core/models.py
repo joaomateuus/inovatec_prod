@@ -298,10 +298,6 @@ class VistoriasRealizadas(models.Model):
         null=True,
         blank=True
     )
-    selo_certificacao = models.BooleanField(
-        null=True,
-        blank=True
-    )
     local_acesso = models.BooleanField(
         null=True,
         blank=True

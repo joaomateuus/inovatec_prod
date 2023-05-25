@@ -91,12 +91,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
   'default': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': os.environ.get('DB_NAME_PROD'),
-    'HOST': os.environ.get('DB_HOST_PROD'),
-    'PORT': os.environ.get('DB_PORT_PROD'),
-    'USER': os.environ.get('DB_USER_PROD'),
-    'PASSWORD': os.environ.get('DB_PASSWORD_PROD'),
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'ueryzvpm',
+    'HOST': 'silly.db.elephantsql.com',
+    'PORT': 5432,
+    'USER': 'ueryzvpm',
+    'PASSWORD': 'oTl0fTO6vhkSpvrBz0IbyUe2unbyfgYY'
   }
 }
 
@@ -150,8 +150,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATISFILES_DIR = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -164,7 +167,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'account.Usuario'
